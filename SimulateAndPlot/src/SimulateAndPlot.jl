@@ -1,8 +1,7 @@
+module SimulateAndPlot
+
 using Distributions
 using Statistics
-using HTTP
-using JSON3
-using Oxygen
 
 struct ExperimentConfig
     n_experiments::Int
@@ -25,14 +24,7 @@ function number_that_dont_include_zero(means, ci_half_widths)
     count((means .- ci_half_widths) .> 0 .|| (means .+ ci_half_widths) .< 0)
 end
 
-@post "/" function (request::HTTP.Request)
-    exp_info = json(request, ExperimentConfig)
-    means, ci_half_widths = calculate_mean_and_ci_half_width(generate_data(exp_info))
-    return number_that_dont_include_zero(means, ci_half_widths)
-end
+export ExperimentConfig
+export generate_data, calculate_mean_and_ci_half_width, number_that_dont_include_zero
 
-@get "/healthz" function ()
-    HTTP.Response(200)
 end
-
-serve()
