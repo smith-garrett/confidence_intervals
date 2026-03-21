@@ -1,5 +1,7 @@
 module SimulateAndPlot
 
-greet() = print("Hello World!")
+function (@main)(ARGS)
+    println("hello!")
+end
 
 end # module SimulateAndPlot

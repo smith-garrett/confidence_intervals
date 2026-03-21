@@ -2,3 +2,12 @@ name = "SimulateAndPlot"
 uuid = "70b0674a-0f26-4dcb-9c8e-03e86981e3cc"
 version = "0.1.0"
 authors = ["Garrett Smith <garrettsmith78@gmail.com>"]
+
+[deps]
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
+
+[compat]
+Distributions = "0.25.123"
+Plots = "1.41.6"
+
