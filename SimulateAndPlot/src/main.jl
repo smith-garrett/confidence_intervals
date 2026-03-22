@@ -15,5 +15,7 @@ end
     HTTP.Response(200)
 end
 
-serve()
+# Warm up JIT before serving
+make_plot(calculate_mean_and_ci_half_width(generate_data(ExperimentConfig(1, 1)))...)
 
+serve()
