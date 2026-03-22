@@ -31,7 +31,7 @@ end
 
 function fig_to_svg(fig)
     buf = IOBuffer()
-    CairoMakie.save(buf, fig)
+    show(buf, MIME("image/svg+xml"), fig)
     return String(take!(buf))
 end
 
