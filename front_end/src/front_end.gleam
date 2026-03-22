@@ -1,11 +1,5 @@
-import gleam/dynamic/decode
-import gleam/int
-import gleam/io
 import gleam/json
-import gleam/list
-import gleam/string
 import lustre
-import lustre/attribute
 import lustre/effect.{type Effect}
 import lustre/element.{type Element}
 import lustre/element/html
@@ -13,37 +7,37 @@ import lustre/event
 import rsvp
 
 type Model {
-  Model(image: ImageState)
+  Model(model_state: State)
 }
 
-type ImageState {
-  ImageAvailable(svg: String)
-  NoImageAvailable
+type State {
+  NoFigureLoadedYet
+  FigureAvailable(svg: String)
+  NoFigureAvailable
+  FigureError
 }
 
 type Msg {
   UserSubmittedExperimentConfig
-  ApiReturnedImage(Result(String, rsvp.Error))
+  ApiReturnedFigure(Result(String, rsvp.Error))
 }
 
 fn init(_args: a) -> #(Model, Effect(Msg)) {
-  let model = Model(NoImageAvailable)
+  let model = Model(NoFigureLoadedYet)
   #(model, effect.none())
 }
 
 fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
   case msg {
     UserSubmittedExperimentConfig -> #(
-      Model(image: NoImageAvailable),
+      Model(model_state: NoFigureAvailable),
       get_figure(),
     )
-    ApiReturnedImage(Ok(img)) -> {
-      io.println("Got image, length: " <> int.to_string(string.length(img)))
-      #(Model(image: ImageAvailable(img)), effect.none())
+    ApiReturnedFigure(Ok(img)) -> {
+      #(Model(model_state: FigureAvailable(img)), effect.none())
     }
-    ApiReturnedImage(Error(err)) -> {
-      echo err
-      #(model, effect.none())
+    ApiReturnedFigure(Error(err)) -> {
+      #(Model(FigureError), effect.none())
     }
   }
 }
@@ -53,8 +47,8 @@ fn get_figure() -> Effect(Msg) {
   let handler =
     rsvp.expect_ok_response(fn(res) {
       case res {
-        Ok(response) -> ApiReturnedImage(Ok(response.body))
-        Error(err) -> ApiReturnedImage(Error(err))
+        Ok(response) -> ApiReturnedFigure(Ok(response.body))
+        Error(err) -> ApiReturnedFigure(Error(err))
       }
     })
   let payload =
@@ -73,9 +67,12 @@ fn view(model: Model) -> Element(Msg) {
       ]),
       html.p([], [html.text("Figure")]),
     ]),
-    case model.image {
-      ImageAvailable(svg) -> element.unsafe_raw_html("", "div", [], svg)
-      NoImageAvailable -> html.p([], [html.text("Waiting...")])
+    case model.model_state {
+      NoFigureLoadedYet ->
+        html.p([], [html.text("Please click to run a simulation")])
+      FigureAvailable(svg) -> element.unsafe_raw_html("", "div", [], svg)
+      NoFigureAvailable -> html.p([], [html.text("Waiting...")])
+      FigureError -> html.p([], [html.text("Figure could not be loaded.")])
     },
   ])
 }
