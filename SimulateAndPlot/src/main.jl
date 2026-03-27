@@ -11,7 +11,6 @@ const CORS_HEADERS = [
 
 function CorsMiddleware(handler)
     return function(req::HTTP.Request)
-        println("CORS middleware")
         # determine if this is a pre-flight request from the browser
         if HTTP.method(req)=="OPTIONS"
             return HTTP.Response(200, CORS_HEADERS)  
@@ -36,4 +35,4 @@ end
 # Warm up JIT before serving
 make_plot(calculate_mean_and_ci_half_width(generate_data(ExperimentConfig(1, 1)))...)
 
-serve(middleware=[CorsMiddleware])
+serve(host="0.0.0.0", port=8080, middleware=[CorsMiddleware])
