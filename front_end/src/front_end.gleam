@@ -1,4 +1,6 @@
+import envoy
 import gleam/json
+import gleam/result
 import lustre
 import lustre/effect.{type Effect}
 import lustre/element.{type Element}
@@ -43,7 +45,9 @@ fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
 }
 
 fn get_figure() -> Effect(Msg) {
-  let url = "http://127.0.0.1:8080/"
+  let url =
+    envoy.get("JULIA_URL")
+    |> result.unwrap("http://127.0.0.1:8080")
   let handler =
     rsvp.expect_ok_response(fn(res) {
       case res {
