@@ -24,3 +24,4 @@ simplifile = ">= 2.4.0 and < 3.0.0"
 
 [dev_dependencies]
 gleeunit = ">= 1.0.0 and < 2.0.0"
+glinter = ">= 2.11.1 and < 3.0.0"
