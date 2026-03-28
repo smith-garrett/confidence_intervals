@@ -24,3 +24,32 @@ envoy = ">= 1.1.0 and < 2.0.0"
 gleeunit = ">= 1.0.0 and < 2.0.0"
 lustre_dev_tools = ">= 2.3.5 and < 3.0.0"
 glinter = ">= 2.11.1 and < 3.0.0"
+
+[tools.glinter]
+stats = true  # show file count, line count, and timing after each run
+include = ["src/", "test/"]  # directories to lint (default: ["src/"])
+exclude = ["src/server/sql.gleam"]  # skip generated files entirely
+
+[tools.glinter.rules]
+avoid_panic = "error"
+avoid_todo = "error"
+echo = "warning"
+assert_ok_pattern = "warning"
+discarded_result = "warning"
+short_variable_name = "warning"
+unnecessary_variable = "warning"
+redundant_case = "warning"
+unwrap_used = "warning"
+deep_nesting = "warning"
+function_complexity = "warning"
+module_complexity = "warning"
+prefer_guard_clause = "warning"
+missing_labels = "warning"
+label_possible = "warning"
+unused_exports = "warning"
+missing_type_annotation = "warning"
+todo_without_message = "warning"
+unqualified_import = "warning"
+panic_without_message = "warning"
+string_inspect = "warning"
+duplicate_import = "warning"

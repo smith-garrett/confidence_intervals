@@ -1,0 +1,36 @@
+pre-commit:
+  parallel: true
+  commands:
+    lint-gleam-back-end:
+      root: "back_end"
+      glob: "src/**/*.gleam"
+      run: |
+        gleam format --check {staged_files} && \
+        gleam run -m glinter
+
+    lint-gleam-front-end:
+      root: "front_end"
+      glob: "src/**/*.gleam"
+      run: |
+        gleam format --check {staged_files} && \
+        gleam run -m glinter
+
+    format-julia:
+      root: "SimulateAndPlot"
+      glob: "src/**/*.jl"
+      run: julia --project=. -e "using JuliaFormatter; format(\".\")"
+
+pre-push:
+  parallel: true
+  commands:
+    gleam-back-test:
+      root: "back_end"
+      run: gleam test
+
+    gleam-front-test:
+      root: "front_end"
+      run: gleam test
+
+    julia-test:
+      root: "SimulateAndPlot"
+      run: julia --project=. test/runtests.jl
