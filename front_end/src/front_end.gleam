@@ -38,7 +38,7 @@ fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
     ApiReturnedFigure(Ok(img)) -> {
       #(Model(model_state: FigureAvailable(img)), effect.none())
     }
-    ApiReturnedFigure(Error(err)) -> {
+    ApiReturnedFigure(Error(_)) -> {
       #(Model(FigureError), effect.none())
     }
   }
