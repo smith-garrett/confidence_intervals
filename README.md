@@ -1,24 +1,17 @@
-# front_end
+# Confidence intervals
 
-[![Package Version](https://img.shields.io/hexpm/v/front_end)](https://hex.pm/packages/front_end)
-[![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/front_end/)
 
-```sh
-gleam add front_end@1
-```
-```gleam
-import front_end
+## Testing
 
-pub fn main() -> Nil {
-  // TODO: An example of the project in use
-}
-```
+### Unit tests
 
-Further documentation can be found at <https://hexdocs.pm/front_end>.
+Unit tests are run by `lefthook` as a pre-push hook.
 
-## Development
+### Integration/smoke tests
 
-```sh
-gleam run   # Run the project
-gleam test  # Run the tests
+Integration/smoke tests are run manually using the following shell scripts:
+
+```bash
+# Run integration smoke tests
+tests/integration/smoke_test.sh && tests/integration/teardown.sh
 ```
