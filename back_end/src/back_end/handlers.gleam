@@ -9,7 +9,6 @@ import wisp.{type Request, type Response}
 
 pub fn serve_index(static_dir: String) -> Response {
   let index_html_path = static_dir <> "/index.html"
-  wisp.log_info("Looking for index.html at: " <> index_html_path)
   case simplifile.read(index_html_path) {
     Ok(html) ->
       wisp.ok()
@@ -32,8 +31,9 @@ pub fn simulate(req: Request) -> Response {
     envoy.get("JULIA_URL")
     |> result.unwrap("http://localhost:8080")
 
-  wisp.log_info("Forwarding to Julia at: " <> julia_url)
-  wisp.log_info("Request body: " <> body)
+  wisp.log_info(
+    "Forwarding to Julia at: " <> julia_url <> ". Request body: " <> body,
+  )
 
   let result = {
     use julia_req <- result.try(

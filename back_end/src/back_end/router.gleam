@@ -3,7 +3,6 @@ import gleam/http.{Get, Post}
 import wisp.{type Request, type Response}
 
 pub fn handle_request(static_dir: String, req: Request) -> Response {
-  wisp.log_info("Static dir: " <> static_dir)
   use <- wisp.log_request(req)
   use <- wisp.rescue_crashes
   use req <- wisp.handle_head(req)
