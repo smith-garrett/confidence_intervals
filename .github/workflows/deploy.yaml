@@ -27,10 +27,8 @@ jobs:
         run: gleam deps download
       - name: Build app
         run: gleam run -m lustre/dev build --minify --outdir=dist
-      - name: Debug dist contents
-        run: find dist -type f
       - name: Fix script path for GitHub Pages
-        run: sed -i 's|/front_end.js|/confidence_intervals/priv/static/front_end.js|g' dist/index.html
+        run: sed -i 's|/front_end.js|/confidence_intervals/front_end.js|g' dist/index.html
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
