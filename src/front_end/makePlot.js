@@ -9,7 +9,6 @@ function toArray(gleamList) {
 }
 
 export function makePlot(id, x, y, err) {
-  console.log("Called!")
   Plotly.react(id, [{
     x: toArray(x),
     y: toArray(y),
