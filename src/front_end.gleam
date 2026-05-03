@@ -2,6 +2,7 @@ import front_end/plot
 import front_end/simulate
 import gleam/int
 import gleam/list
+import gleam/result
 import lustre
 import lustre/attribute
 import lustre/effect.{type Effect}
@@ -10,7 +11,7 @@ import lustre/element/html
 import lustre/event
 
 type Model {
-  Model(model_state: State)
+  Model(model_state: State, n_exp: Int, n_samples: Int)
 }
 
 type State {
@@ -19,19 +20,29 @@ type State {
 }
 
 type Msg {
+  UserEnteredNumExperiments(String)
+  UserEnterdNumSamples(String)
   UserSubmittedExperimentConfig
 }
 
 fn init(_args: a) -> #(Model, Effect(Msg)) {
-  let model = Model(model_state: NoFigureLoadedYet)
+  let model = Model(model_state: NoFigureLoadedYet, n_exp: 100, n_samples: 100)
   #(model, effect.none())
 }
 
 fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
   case msg {
+    UserEnteredNumExperiments(n_exp) -> {
+      let n = result.unwrap(int.parse(n_exp), model.n_samples)
+      #(Model(..model, n_exp: n), effect.none())
+    }
+    UserEnterdNumSamples(n_samples) -> {
+      let n = result.unwrap(int.parse(n_samples), model.n_samples)
+      #(Model(..model, n_samples: n), effect.none())
+    }
     UserSubmittedExperimentConfig -> #(
-      Model(model_state: FigureAvailable),
-      effectful_plot("main", 100, 100),
+      Model(..model, model_state: FigureAvailable),
+      effectful_plot("main", model.n_exp, model.n_samples),
     )
   }
 }
@@ -39,11 +50,42 @@ fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
 fn view(model: Model) -> Element(Msg) {
   html.div([], [
     html.script([attribute.src("https://cdn.plot.ly/plotly-3.4.0.min.js")], ""),
-    html.div([], [
-      html.button([event.on_click(UserSubmittedExperimentConfig)], [
-        html.text("Run simulation"),
+    html.form([], [
+      html.p([], [
+        html.label([attribute.for("n-exp-input")], [
+          html.text("Number of experiments to run: "),
+        ]),
+        html.input([
+          attribute.id("n-exp-input"),
+          attribute.type_("number"),
+          attribute.step("1"),
+          attribute.value(int.to_string(model.n_exp)),
+          event.on_input(UserEnteredNumExperiments),
+        ]),
       ]),
-      html.p([], [html.text("Figure")]),
+      html.p([], [
+        html.label([attribute.for("n-samples-input")], [
+          html.text("Number of samples per experiment: "),
+        ]),
+        html.input([
+          attribute.id("n-samples-input"),
+          attribute.type_("number"),
+          attribute.step("1"),
+          attribute.value(int.to_string(model.n_samples)),
+          event.on_input(UserEnterdNumSamples),
+        ]),
+      ]),
+      html.p([], [
+        html.button(
+          [
+            attribute.type_("button"),
+            event.on_click(UserSubmittedExperimentConfig),
+          ],
+          [
+            html.text("Run simulation"),
+          ],
+        ),
+      ]),
     ]),
     html.div([attribute.id("chart-main")], []),
     case model.model_state {
