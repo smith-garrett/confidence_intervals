@@ -48,62 +48,118 @@ fn update(model: Model, msg: Msg) -> #(Model, Effect(Msg)) {
 }
 
 fn view(model: Model) -> Element(Msg) {
-  html.div([], [
-    html.script([attribute.src("https://cdn.plot.ly/plotly-3.4.0.min.js")], ""),
-    html.form([], [
-      html.p([], [
-        html.label([attribute.for("n-exp-input")], [
-          html.text("Number of experiments to run: "),
+  html.html([], [
+    html.head([], [
+      html.style(
+        [],
+        "body{margin:40px auto;
+max-width:650px;
+line-height:1.6;
+font-size:18px;
+color:#444;
+padding:0 10px}
+h1,h2,h3{line-height:1.2}",
+      ),
+      html.title([], "Confidence intervals"),
+      html.script(
+        [attribute.src("https://cdn.plot.ly/plotly-3.4.0.min.js")],
+        "",
+      ),
+    ]),
+    html.body([], [
+      html.h1([], [html.text("Confidence intervals")]),
+      html.div([], [
+        html.p([], [
+          html.text(
+            "Confidence intervals are unintuitive things. The name \"confidence intervals\" is misleading, too, which doesn't help. Confidence intervals are most often calculated for means would seem to suggest that the range of values the interval spans contains the true value of the mean. But this interpretation is correct.",
+          ),
         ]),
-        html.input([
-          attribute.id("n-exp-input"),
-          attribute.type_("number"),
-          attribute.step("1"),
-          attribute.value(int.to_string(model.n_exp)),
-          event.on_input(UserEnteredNumExperiments),
+        html.p([], [
+          html.text(
+            "Such incorrect interpretations are common. Wikipedia has a ",
+          ),
+          html.a(
+            [
+              attribute.href(
+                "https://en.wikipedia.org/wiki/Confidence_interval#Common_misunderstandings",
+              ),
+            ],
+            [html.text("whole subsection")],
+          ),
+          html.text(
+            " on its page on confidence intervals dedicated to common misinterpretations. Even professional researchers often endorse incorrect interpretations, ",
+          ),
+          html.a(
+            [
+              attribute.href(
+                "https://link.springer.com/content/pdf/10.3758/s13423-013-0572-3.pdf",
+              ),
+            ],
+            [html.text("in one study")],
+          ),
+          html.text(
+            " performing only slightly better than students without training in statistics.",
+          ),
         ]),
-      ]),
-      html.p([], [
-        html.label([attribute.for("n-samples-input")], [
-          html.text("Number of samples per experiment: "),
+        html.form([], [
+          html.p([], [
+            html.label([attribute.for("n-exp-input")], [
+              html.text("Number of experiments to run: "),
+            ]),
+            html.input([
+              attribute.id("n-exp-input"),
+              attribute.type_("number"),
+              attribute.step("1"),
+              attribute.value(int.to_string(model.n_exp)),
+              event.on_input(UserEnteredNumExperiments),
+            ]),
+          ]),
+          html.p([], [
+            html.label([attribute.for("n-samples-input")], [
+              html.text("Number of samples per experiment: "),
+            ]),
+            html.input([
+              attribute.id("n-samples-input"),
+              attribute.type_("number"),
+              attribute.step("1"),
+              attribute.value(int.to_string(model.n_samples)),
+              event.on_input(UserEnterdNumSamples),
+            ]),
+          ]),
+          html.p([], [
+            html.button(
+              [
+                attribute.type_("button"),
+                event.on_click(UserSubmittedExperimentConfig),
+              ],
+              [
+                html.text("Run simulation"),
+              ],
+            ),
+          ]),
         ]),
-        html.input([
-          attribute.id("n-samples-input"),
-          attribute.type_("number"),
-          attribute.step("1"),
-          attribute.value(int.to_string(model.n_samples)),
-          event.on_input(UserEnterdNumSamples),
-        ]),
-      ]),
-      html.p([], [
-        html.button(
-          [
-            attribute.type_("button"),
-            event.on_click(UserSubmittedExperimentConfig),
-          ],
-          [
-            html.text("Run simulation"),
-          ],
-        ),
+        html.div([attribute.id("chart-main")], []),
+        case model.model_state {
+          NoFigureLoadedYet ->
+            html.p([], [html.text("Please click to run a simulation")])
+          FigureAvailable -> html.p([], [])
+        },
       ]),
     ]),
-    html.div([attribute.id("chart-main")], []),
-    case model.model_state {
-      NoFigureLoadedYet ->
-        html.p([], [html.text("Please click to run a simulation")])
-      FigureAvailable -> html.p([], [])
-    },
   ])
 }
 
 fn effectful_plot(name: String, n_exps: Int, n_samples: Int) -> Effect(Msg) {
   let x_values = int.range(n_exps, 0, [], fn(acc, i) { list.prepend(acc, i) })
+  let exp_config =
+    simulate.ExperimentConfig(
+      n_experiments: n_exps,
+      n_samples_per_experiment: n_samples,
+    )
   let means_and_cis =
     simulate.calculate_means_and_ci_half_widths(
-      simulate.generate_data(simulate.ExperimentConfig(
-        n_experiments: n_exps,
-        n_samples_per_experiment: n_samples,
-      )),
+      exp_config,
+      simulate.generate_data(exp_config),
     )
   effect.from(fn(_dispatch) {
     plot.plotly_plot(

@@ -2,6 +2,7 @@ import front_end/simulate
 import gleam/float
 import gleam/int
 import gleam/list
+import gleam/result
 
 pub fn get_exp_data_test() {
   let empty_list: List(Float) = []
@@ -34,8 +35,10 @@ pub fn generate_data_test() {
 }
 
 pub fn calculate_means_and_ci_half_widths_test() {
+  let exp_config =
+    simulate.ExperimentConfig(n_experiments: 1, n_samples_per_experiment: 3)
   let data = [[-1.0, 0.0, 1.0]]
-  let res = simulate.calculate_means_and_ci_half_widths(data)
+  let res = simulate.calculate_means_and_ci_half_widths(exp_config, data)
   assert res.means == [0.0]
-  assert res.half_widths == [1.96]
+  assert res.half_widths == [1.96 /. result.unwrap(float.square_root(3.0), 1.0)]
 }

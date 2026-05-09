@@ -56,13 +56,17 @@ pub fn generate_data(exp_config: ExperimentConfig) -> List(List(Float)) {
 }
 
 pub fn calculate_means_and_ci_half_widths(
+  exp_config: ExperimentConfig,
   data: List(List(Float)),
 ) -> MeansAndCIHalfWidths {
   let means = data |> list.map(maths.mean) |> result.values
   let vars = data |> list.map(maths.variance(_, 1)) |> result.values
   let ci_half_widths =
     list.map(vars, fn(x) {
-      let std = float.square_root(x /. int.to_float(list.length(vars)))
+      let std =
+        float.square_root(
+          x /. int.to_float(exp_config.n_samples_per_experiment),
+        )
       result.unwrap(std, 0.0) *. 1.96
     })
   MeansAndCIHalfWidths(means, ci_half_widths)
