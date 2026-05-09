@@ -60,7 +60,7 @@ color:#444;
 padding:0 10px}
 h1,h2,h3{line-height:1.2}",
       ),
-      html.title([], "Confidence intervals"),
+      html.title([], "WORK IN PROGRESS: Confidence intervals"),
       html.script(
         [attribute.src("https://cdn.plot.ly/plotly-3.4.0.min.js")],
         "",
@@ -71,13 +71,11 @@ h1,h2,h3{line-height:1.2}",
       html.div([], [
         html.p([], [
           html.text(
-            "Confidence intervals are unintuitive things. The name \"confidence intervals\" is misleading, too, which doesn't help. Confidence intervals are most often calculated for means would and would seem to suggest that the range of values the interval spans contains the true value of the mean. But this interpretation is incorrect.",
+            "Confidence intervals are unintuitive things. The name \"confidence intervals\" is misleading, because they don't really have anything to do with confidence at all. Confidence intervals are most often calculated for means, but understanding what they really mean is tricky.",
           ),
         ]),
         html.p([], [
-          html.text(
-            "Such incorrect interpretations are common. Wikipedia has a ",
-          ),
+          html.text("Misinterpretations are common: Wikipedia has a "),
           html.a(
             [
               attribute.href(
