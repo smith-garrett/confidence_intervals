@@ -67,6 +67,9 @@ h1,h2,h3{line-height:1.2}",
       ),
     ]),
     html.body([], [
+      html.a([attribute.href("https://smith-garrett.github.io/posts/")], [
+        html.text("< Back to posts"),
+      ]),
       html.h1([], [html.text("Confidence intervals")]),
       html.div([], [
         html.p([], [
@@ -97,6 +100,16 @@ h1,h2,h3{line-height:1.2}",
           ),
           html.text(
             " performing only slightly better than students without training in statistics.",
+          ),
+        ]),
+        html.p([], [
+          html.text(
+            "But while it's easy to get confidence intervals wrong, the concept is not actually that complicated. All a confidence interval is is this: If we gather data and calculate the mean and confidence interval in the same way many times, the calculated confidence intervals would contain the true value of the mean 95% of the time. For a given experiment, you can never know if the current confidence interval actually contains the true value, though.",
+          ),
+        ]),
+        html.p([], [
+          html.text(
+            "In words, the definition still feels abstract, but it's easy to visualize...",
           ),
         ]),
         html.form([], [
