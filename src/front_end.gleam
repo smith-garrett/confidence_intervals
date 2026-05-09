@@ -71,7 +71,7 @@ h1,h2,h3{line-height:1.2}",
       html.div([], [
         html.p([], [
           html.text(
-            "Confidence intervals are unintuitive things. The name \"confidence intervals\" is misleading, too, which doesn't help. Confidence intervals are most often calculated for means would seem to suggest that the range of values the interval spans contains the true value of the mean. But this interpretation is correct.",
+            "Confidence intervals are unintuitive things. The name \"confidence intervals\" is misleading, too, which doesn't help. Confidence intervals are most often calculated for means would and would seem to suggest that the range of values the interval spans contains the true value of the mean. But this interpretation is incorrect.",
           ),
         ]),
         html.p([], [
