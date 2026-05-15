@@ -66,7 +66,7 @@ width:20vw;
 margin-right:-22vw;
 font-size:14px}",
       ),
-      html.title([], "WORK IN PROGRESS: Confidence intervals"),
+      html.title([], "Confidence intervals"),
       html.script(
         [attribute.src("https://cdn.plot.ly/plotly-3.4.0.min.js")],
         "",
