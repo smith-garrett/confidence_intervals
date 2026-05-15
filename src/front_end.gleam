@@ -109,9 +109,15 @@ h1,h2,h3{line-height:1.2}",
         ]),
         html.p([], [
           html.text(
-            "In words, the definition still feels abstract, but it's easy to visualize...",
+            "In words, the definition still feels abstract, but it's easy to visualize. The tool below allows you to simulate repeated experiments under the exact same conditions. You can enter the number of experiments to run and the number of data points to sample per experiment.",
           ),
         ]),
+        html.p([], [
+          html.text(
+            "When you click the button, random samples from a standard normal are drawn. The average of those data points is calculated, as well as the 95% of the mean. This is repeated for each experiment. The plot shows the mean for each experiment and the limits of the 95% confidence interval. Play around with the parameters of the simulation.",
+          ),
+        ]),
+        html.hr([]),
         html.form([], [
           html.p([], [
             html.label([attribute.for("n-exp-input")], [
@@ -152,9 +158,11 @@ h1,h2,h3{line-height:1.2}",
         html.div([attribute.id("chart-main")], []),
         case model.model_state {
           NoFigureLoadedYet ->
-            html.p([], [html.text("Please click to run a simulation")])
+            html.p([], [html.text("Please click to run experiments.")])
           FigureAvailable -> html.p([], [])
         },
+        html.hr([]),
+        html.p([], [html.text("")]),
       ]),
     ]),
   ])
@@ -162,22 +170,27 @@ h1,h2,h3{line-height:1.2}",
 
 fn effectful_plot(name: String, n_exps: Int, n_samples: Int) -> Effect(Msg) {
   let x_values = int.range(n_exps, 0, [], fn(acc, i) { list.prepend(acc, i) })
+
   let exp_config =
     simulate.ExperimentConfig(
       n_experiments: n_exps,
       n_samples_per_experiment: n_samples,
     )
+
   let means_and_cis =
     simulate.calculate_means_and_ci_half_widths(
       exp_config,
       simulate.generate_data(exp_config),
     )
+
   effect.from(fn(_dispatch) {
     plot.plotly_plot(
       "chart-" <> name,
       x_values,
       means_and_cis.means,
       means_and_cis.half_widths,
+      plot.get_colors(means_and_cis),
+      plot.get_shapes(means_and_cis),
     )
   })
 }

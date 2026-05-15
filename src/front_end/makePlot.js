@@ -8,13 +8,27 @@ function toArray(gleamList) {
   return result;
 }
 
-export function makePlot(id, x, y, err) {
-  Plotly.react(id, [{
-    x: toArray(x),
-    y: toArray(y),
+export function makePlot(id, x, y, err, colors, shapes) {
+  const xs = toArray(x);
+  const ys = toArray(y);
+  const errs = toArray(err);
+  const cs = toArray(colors);
+  const shp = toArray(shapes)
+
+  const traces = xs.map((xi, i) => ({
+    x: [xi],
+    y: [ys[i]],
     type: 'scatter',
     mode: 'markers',
-    line: { color: '#ffaff3', width: 2 },
-    error_y: { type: 'data', array: toArray(err) }
-  }], {});
+    marker: { color: cs[i], symbol: shp[i], size: 10},
+    error_y: {
+      type: 'data',
+      array: [errs[i]],
+      color: cs[i],
+      visible: true,
+    },
+    showlegend: false,
+  }));
+
+  Plotly.react(id, traces, {});
 }
