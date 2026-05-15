@@ -12,12 +12,13 @@ pub type MeansAndCIHalfWidths {
   MeansAndCIHalfWidths(means: List(Float), half_widths: List(Float))
 }
 
-/// Irwin-Hall approximation of normal distribution
+/// Box-Muller method
 pub fn randn() -> Float {
-  let sum_of_rands =
-    int.range(0, 12, [], fn(acc, _) { list.prepend(acc, float.random()) })
-    |> float.sum()
-  sum_of_rands -. 6.0
+  let u = float.random()
+  let lnu = result.unwrap(maths.natural_logarithm(u), 0.0)
+  let v = float.random()
+  let mult = result.unwrap(float.square_root(-2.0 *. lnu), 0.0)
+  mult *. maths.cos(2.0 *. maths.pi() *. v)
 }
 
 pub fn get_exp_data(n_samples: Int, data: List(Float)) -> List(Float) {
@@ -61,13 +62,14 @@ pub fn calculate_means_and_ci_half_widths(
 ) -> MeansAndCIHalfWidths {
   let means = data |> list.map(maths.mean) |> result.values
   let vars = data |> list.map(maths.variance(_, 1)) |> result.values
+  // Using a normal approximation, gets wonky for small sample sizes (~< 30)!
   let ci_half_widths =
     list.map(vars, fn(x) {
-      let std =
+      let std_error =
         float.square_root(
           x /. int.to_float(exp_config.n_samples_per_experiment),
         )
-      result.unwrap(std, 0.0) *. 1.96
+      result.unwrap(std_error, 0.0) *. 1.96
     })
   MeansAndCIHalfWidths(means, ci_half_widths)
 }

@@ -3,6 +3,7 @@ import gleam/float
 import gleam/int
 import gleam/list
 import gleam/result
+import gleam_community/maths
 
 pub fn get_exp_data_test() {
   let empty_list: List(Float) = []
@@ -18,15 +19,21 @@ pub fn get_many_experiments_test() {
   assert res |> list.map(list.length) |> list.all(fn(x) { x == 5 })
 }
 
-/// The Irwin-Hall approximation to the normal distribution should always fall within [-6, 6]
 pub fn randn_test() {
-  let std_normal_variates =
-    int.range(0, 1000, [], fn(lst, _i) { list.append(lst, [simulate.randn()]) })
-  assert list.all(std_normal_variates, fn(x) { -6.0 <. x && x <. 6.0 })
-  let mean =
-    float.sum(std_normal_variates)
-    /. int.to_float(list.length(std_normal_variates))
-  float.loosely_equals(mean, 0.0, 0.1)
+  let samples =
+    int.range(0, 10_000, [], fn(lst, _i) { list.prepend(lst, simulate.randn()) })
+
+  assert float.loosely_equals(
+    result.unwrap(maths.mean(samples), 1.0),
+    0.0,
+    0.01,
+  )
+
+  assert float.loosely_equals(
+    result.unwrap(maths.variance(samples, 1), 0.0),
+    1.0,
+    0.1,
+  )
 }
 
 pub fn generate_data_test() {

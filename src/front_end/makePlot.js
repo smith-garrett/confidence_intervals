@@ -8,7 +8,7 @@ function toArray(gleamList) {
   return result;
 }
 
-export function makePlot(id, x, y, err, colors, shapes) {
+export function makePlot(id, x, y, err, colors, shapes, title) {
   const xs = toArray(x);
   const ys = toArray(y);
   const errs = toArray(err);
@@ -30,5 +30,7 @@ export function makePlot(id, x, y, err, colors, shapes) {
     showlegend: false,
   }));
 
-  Plotly.react(id, traces, {});
+  const layout = {title: {text: title}};
+
+  Plotly.react(id, traces, layout);
 }

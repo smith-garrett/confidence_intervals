@@ -9,6 +9,7 @@ pub fn plotly_plot(
   err: List(Float),
   color: List(String),
   shapes: List(String),
+  title: String,
 ) -> Nil
 
 pub fn get_colors(

@@ -183,14 +183,18 @@ fn effectful_plot(name: String, n_exps: Int, n_samples: Int) -> Effect(Msg) {
       simulate.generate_data(exp_config),
     )
 
+  let colors = plot.get_colors(means_and_cis)
+  let n_sig = list.count(colors, fn(x) { x == "red" })
+
   effect.from(fn(_dispatch) {
     plot.plotly_plot(
       "chart-" <> name,
       x_values,
       means_and_cis.means,
       means_and_cis.half_widths,
-      plot.get_colors(means_and_cis),
+      colors,
       plot.get_shapes(means_and_cis),
+      n_sig |> int.to_string <> " CIs do not include zero",
     )
   })
 }
