@@ -30,7 +30,7 @@ export function makePlot(id, x, y, err, colors, shapes, title) {
     showlegend: false,
   }));
 
-  const layout = {title: {text: title}};
+  const layout = {title: {text: title}, yaxis: {range: [-2, 2]}};
 
   Plotly.react(id, traces, layout);
 }

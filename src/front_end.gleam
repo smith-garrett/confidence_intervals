@@ -107,12 +107,12 @@ font-size:14px}",
         ]),
         html.p([], [
           html.text(
-            "But while it's easy to get confidence intervals wrong, the concept is not actually that complicated. All a confidence interval is is this: If we gather data and calculate the mean and confidence interval in the same way many times, the calculated confidence intervals should contain the true value of the mean 95% of the time. For a given experiment, you can never know if the current confidence interval actually contains the true value, though.",
+            "But while it's easy to get confidence intervals wrong, the concept is not actually that complicated. All a confidence interval is is this: If we gather data and calculate the mean and confidence interval in the same way many times, the calculated confidence intervals should contain the true value of the mean 95% of the time. But for a given experiment, we can never know if the current confidence interval actually contains the true value.",
           ),
         ]),
         html.p([], [
           html.text(
-            "In words, the definition still feels abstract, but it's easy to visualize. The tool below allows you to simulate repeated experiments under the exact same conditions. You can enter the number of experiments to run and the number of data points to sample per experiment.",
+            "In words, the definition still feels abstract, but it's easy to visualize. The tool below allows us to simulate repeated experiments under the exact same conditions. You can enter the number of experiments to run and the number of data points to sample per experiment.",
           ),
         ]),
         html.p([], [
@@ -188,7 +188,7 @@ font-size:14px}",
         html.hr([]),
         html.p([], [
           html.text(
-            "Notice that the confidence interval calculated from a single experiment is not very informative. You can't know if it is one of the 95% that contains the true value or if you got unlucky and it completely misses the true value. All you can really say is that if your confidence interval is narrow, ",
+            "Notice that the confidence interval calculated from a single experiment is not very informative. We can't know if it is one of the 95% that contains the true value or if we got unlucky and it completely misses the true value. All we can really say is that if our confidence interval is narrow, ",
           ),
           html.a(
             [
@@ -198,10 +198,15 @@ font-size:14px}",
             ],
             [
               html.text(
-                "then your estimate of the mean is probably pretty precise. ",
+                "then our estimate of the mean is probably pretty precise. ",
               ),
             ],
           ),
+          html.aside([], [
+            html.text(
+              "Notice how the confidence intervals in the plot get narrower if you increase the number of samples per experiment.",
+            ),
+          ]),
         ]),
         html.p([], [
           html.text(
@@ -226,7 +231,7 @@ font-size:14px}",
         ]),
         html.p([], [
           html.text(
-            "So there we go. Confidence intervals just tell you something about your sampling procedure: if it is set up well, then the 95% confidence interval around the mean should contain the true value in 95% of repeated experiments. That tells you very little about one particular experiment, though. If you want to draw a conclusion about a single experiment to the effect of, \"I am 95% certain that the mean of this data set lies in the interval [a, b] given the data and my assumptions,\" then you will need to switch to a ",
+            "So there we go. Confidence intervals just tell us something about our sampling procedure: if it is set up well, then the 95% confidence interval around the mean should contain the true value in 95% of repeated experiments. That tells us very little about one particular experiment, though. If we want to draw a conclusion about a single experiment to the effect of, \"I am 95% certain that the mean of this data set lies in the interval [a, b] given the data and my assumptions,\" then we will need to switch to a ",
           ),
           html.a([attribute.href("https://bruno.nicenboim.me/bayescogsci/")], [
             html.text("Bayesian approach."),
