@@ -58,7 +58,13 @@ line-height:1.6;
 font-size:18px;
 color:#444;
 padding:0 10px}
-h1,h2,h3{line-height:1.2}",
+h1,h2,h3{line-height:1.2}
+aside{display:inline;
+float:right;
+position:relative;
+width:20vw;
+margin-right:-22vw;
+font-size:14px}",
       ),
       html.title([], "WORK IN PROGRESS: Confidence intervals"),
       html.script(
@@ -74,11 +80,8 @@ h1,h2,h3{line-height:1.2}",
       html.div([], [
         html.p([], [
           html.text(
-            "Confidence intervals are unintuitive things. The name \"confidence intervals\" is misleading, because they don't really have anything to do with confidence at all. Confidence intervals are most often calculated for means, but understanding what they really mean is tricky.",
+            "Confidence intervals are unintuitive things. The name \"confidence intervals\" is misleading, because they don't really have anything to do with confidence at all. Misinterpretations are common: Wikipedia has a ",
           ),
-        ]),
-        html.p([], [
-          html.text("Misinterpretations are common: Wikipedia has a "),
           html.a(
             [
               attribute.href(
@@ -104,7 +107,7 @@ h1,h2,h3{line-height:1.2}",
         ]),
         html.p([], [
           html.text(
-            "But while it's easy to get confidence intervals wrong, the concept is not actually that complicated. All a confidence interval is is this: If we gather data and calculate the mean and confidence interval in the same way many times, the calculated confidence intervals would contain the true value of the mean 95% of the time. For a given experiment, you can never know if the current confidence interval actually contains the true value, though.",
+            "But while it's easy to get confidence intervals wrong, the concept is not actually that complicated. All a confidence interval is is this: If we gather data and calculate the mean and confidence interval in the same way many times, the calculated confidence intervals should contain the true value of the mean 95% of the time. For a given experiment, you can never know if the current confidence interval actually contains the true value, though.",
           ),
         ]),
         html.p([], [
@@ -114,8 +117,24 @@ h1,h2,h3{line-height:1.2}",
         ]),
         html.p([], [
           html.text(
-            "When you click the button, random samples from a standard normal are drawn. The average of those data points is calculated, as well as the 95% of the mean. This is repeated for each experiment. The plot shows the mean for each experiment and the limits of the 95% confidence interval. Play around with the parameters of the simulation.",
+            "When you click the button, random samples from a standard normal distribution are drawn (mean zero and standard deviation one). The average of the data points is calculated, as well as the 95% confidence interval of the mean. This is repeated for each experiment. The plot shows the mean for each experiment and the limits of the 95% confidence interval. Play around with the parameters of the simulation.",
           ),
+          html.aside([], [
+            html.text(
+              "Note that these confidence intervals are calculated using the ",
+            ),
+            html.a(
+              [
+                attribute.href(
+                  "https://en.wikipedia.org/wiki/Normal_distribution#Confidence_intervals",
+                ),
+              ],
+              [html.text("asymtotic approximatation, ")],
+            ),
+            html.text(
+              "which is only valid for large sample sizes. For per-experiment sample sizes less than about 30, the confidence intervals get too small, and less than 95% of them contain zero.",
+            ),
+          ]),
         ]),
         html.hr([]),
         html.form([], [
@@ -159,10 +178,63 @@ h1,h2,h3{line-height:1.2}",
         case model.model_state {
           NoFigureLoadedYet ->
             html.p([], [html.text("Please click to run experiments.")])
-          FigureAvailable -> html.p([], [])
+          FigureAvailable ->
+            html.p([], [
+              html.text(
+                "Experiments where the 95% confidence interval (CI) does not contain the true value (zero) are plotted with red Xs; all other experiments are plotted with black circles.",
+              ),
+            ])
         },
         html.hr([]),
-        html.p([], [html.text("")]),
+        html.p([], [
+          html.text(
+            "Notice that the confidence interval calculated from a single experiment is not very informative. You can't know if it is one of the 95% that contains the true value or if you got unlucky and it completely misses the true value. All you can really say is that if your confidence interval is narrow, ",
+          ),
+          html.a(
+            [
+              attribute.href(
+                "https://vasishth.github.io/Freq_CogSci/the-confidence-interval-and-what-its-good-for.html",
+              ),
+            ],
+            [
+              html.text(
+                "then your estimate of the mean is probably pretty precise. ",
+              ),
+            ],
+          ),
+        ]),
+        html.p([], [
+          html.text(
+            "The nice thing about simulations is that we know exactly what the true values are. We know the true value of the mean, because we chose it to be zero; variability around that value is due to the randomness of sampling. With this choice, we can easily check to make sure that our confidence intervals behave as expected. For any real experiment, we can never perform such a check because we generally don't have access to the true data-generating process and therefore can't know what the true value is.",
+          ),
+        ]),
+        html.p([], [
+          html.text(
+            "Another crucial take-away: The data are random in each experiment, which makes the means calculated from each data set a random themselves. The true value of the mean, on the other hand, is assumed to be a single, unchanging, fixed value. This is a central assumption of ",
+          ),
+          html.a(
+            [
+              attribute.href(
+                "https://en.wikipedia.org/wiki/Frequentist_inference",
+              ),
+            ],
+            [html.text("frequentist statistics.")],
+          ),
+          html.text(
+            " We can't know the true value, but if we do our stats carefully, then we can hope that our estimates from variable data will be reasonably close.",
+          ),
+        ]),
+        html.p([], [
+          html.text(
+            "So there we go. Confidence intervals just tell you something about your sampling procedure: if it is set up well, then the 95% confidence interval around the mean should contain the true value in 95% of repeated experiments. That tells you very little about one particular experiment, though. If you want to draw a conclusion about a single experiment to the effect of, \"I am 95% certain that the mean of this data set lies in the interval [a, b] given the data and my assumptions,\" then you will need to switch to a ",
+          ),
+          html.a([attribute.href("https://bruno.nicenboim.me/bayescogsci/")], [
+            html.text("Bayesian approach."),
+          ]),
+          html.text(
+            " Bayesian statistics comes with its own challenges, but in certain ways, it's more intuitive, in my view. But that will have to wait for another post. 😉",
+          ),
+        ]),
       ]),
     ]),
   ])
