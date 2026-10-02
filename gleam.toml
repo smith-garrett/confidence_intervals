@@ -54,3 +54,8 @@ unqualified_import = "warning"
 panic_without_message = "warning"
 string_inspect = "warning"
 duplicate_import = "warning"
+
+[tools.lustre.html]
+stylesheets = [{content = "body{margin:40px auto;max-width:650px;line-height:1.6;font-size:18px;color:#444;padding:0 10px}h1,h2,h3{line-height:1.2}aside{display:inline;float:right;position:relative;width:20vw;margin-right:-22vw;font-size:14px}"}]
+title = "Confidence intervals"
+scripts = [{src = "https://cdn.plot.ly/plotly-3.4.0.min.js"}]
